@@ -12,6 +12,7 @@ export default function SignUp({ setView }) {
   const [confirmationRequired, setConfirmationRequired] = useState(false);
 
   const supabase = createBrowserSupabaseClient();
+
   // signup mutation
   const signupMutation = useMutation({
     mutationFn: async () => {
@@ -32,6 +33,18 @@ export default function SignUp({ setView }) {
       }
     },
   });
+
+  const signInWithKakao = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "kakao",
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/callback`
+          : "http://localhost:3000/auth/callback",
+      },
+    });
+    console.log(data);
+  };
 
   const verifyOtpMutation = useMutation({
     mutationFn: async () => {
@@ -101,9 +114,18 @@ export default function SignUp({ setView }) {
               : signupMutation.isPending
           }
           color="light-blue"
-          className="w-full text-md py-1"
+          className="w-full text-sm py-2"
         >
           {confirmationRequired ? "인증하기" : "가입하기"}
+        </Button>
+        <Button
+          onClick={() => signInWithKakao()}
+          className="w-full text-sm font-normal text-black bg-yellow-500 flex items-center"
+        >
+          <i className="fa-solid fa-comment -ml-2"></i>
+          <span className="absolute left-1/2 transform -translate-x-1/2">
+            카카오로 시작하기
+          </span>
         </Button>
       </div>
 
