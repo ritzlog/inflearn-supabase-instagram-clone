@@ -30,6 +30,7 @@ export default function ChatPeopleList({ loggedInUser }) {
     <div className="h-screen min-w-60 flex flex-col bg-gray-50">
       {getAllUsersQuery.data?.map((user, index) => (
         <Person
+          key={user.id}
           onClick={() => {
             setSelectedUserId(user.id);
             setSelectedUserIndex(index);
